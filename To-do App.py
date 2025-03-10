@@ -2,6 +2,7 @@
 ########TO-DO APP IN PYTHON########
 ###################################
 
+#Defing the function
 def task():
     tasks = [] #creating an empty list to add tasks
     print("---WELCOME TO THE TASK MANAGEMENT APPLICATION---")
@@ -50,4 +51,5 @@ def task():
         else:
             print("Invalid input.")
 
+#Executing the program
 task()
