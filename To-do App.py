@@ -2,54 +2,41 @@
 ########TO-DO APP IN PYTHON########
 ###################################
 
-#Defing the function
-def task():
-    tasks = [] #creating an empty list to add tasks
-    print("---WELCOME TO THE TASK MANAGEMENT APPLICATION---")
+import PySimpleGUI as sg
 
-    total_task = int(input("Enter the no. of tasks you want to add = "))
-    for i in range(1, total_task+1):
-        task_name = input(f"Enter task {i} = ")
-        tasks.append(task_name)
+# Initial task list
+tasks = []
 
-    print(f"Today's tasks are:\n{tasks}")
-    while True:
-        operation = int(input("Enter:\n1-Add\n2-Update\n3-Delete\n4-View\n5-Exit/Stop/\n"))
+# Define the layout
+layout = [
+    [sg.Text("Your Tasks:")],
+    [sg.Listbox(values=tasks, size=(40, 10), key='TASKS')],
+    [sg.InputText('', key='TASK_INPUT'), sg.Button("Add Task")],
+    [sg.Button("Delete Task"), sg.Button("Clear All"), sg.Button("Exit")]
+]
 
-        #Adding a Task
-        if operation == 1: 
-            add = input("Enter the task you want to add = ")
-            tasks.append(add)
-            print(f"Task {add} has been successfully added...\n")
+# Create the window
+window = sg.Window("To-Do App", layout)
 
-        #Updating an Existing Task
-        elif operation == 2:
-            updated_val = input("Enter the task name you want to update = ")
-            if updated_val in tasks:
-                up = input("Enter new task = ")
-                ind = tasks.index(updated_val) #returning the index value of the existing task
-                tasks [ind] = up
-                print(f"Updated task {up}.\n")
+# Event loop
+while True:
+    event, values = window.read()
+    if event == sg.WINDOW_CLOSED or event == "Exit":
+        break
+    elif event == "Add Task":
+        task = values['TASK_INPUT'].strip()
+        if task:
+            tasks.append(task)
+            window['TASKS'].update(tasks)
+            window['TASK_INPUT'].update('')
+    elif event == "Delete Task":
+        selected = values['TASKS']
+        if selected:
+            for item in selected:
+                tasks.remove(item)
+            window['TASKS'].update(tasks)
+    elif event == "Clear All":
+        tasks.clear()
+        window['TASKS'].update(tasks)
 
-        #Deleting a Task        
-        elif operation == 3:
-            del_val = input("Which task you want to delete = ")
-            if del_val in tasks:
-                ind = tasks.index(del_val)
-                del tasks[ind]
-                print(f"Task {del_val} has been deleted...\n")
-
-        #Viewing Existing Tasks
-        elif operation == 4:
-            print(f"Total tasks = {tasks}\n")
-
-        #Exiting the Application
-        elif operation == 5:
-            print("Closing the program...")
-            break
-
-        else:
-            print("Invalid input.")
-
-#Executing the program
-task()
+window.close()
